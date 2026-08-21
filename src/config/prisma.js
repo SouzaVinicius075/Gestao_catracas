@@ -22,20 +22,3 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 export default prisma;
-
-// import { PrismaClient } from '@prisma/client';
-// // import { PrismaClient } from '@prisma/client/extension';
-
-// let prisma;
-
-// // Verifica se já existe uma instância global no ambiente de desenvolvimento
-// if (process.env.NODE_ENV === 'production') {
-//     prisma = new PrismaClient();
-// } else {
-//     if (!global.prisma) {
-//         global.prisma = new PrismaClient();
-//     }
-//     prisma = global.prisma;
-// }
-
-// export default prisma;
