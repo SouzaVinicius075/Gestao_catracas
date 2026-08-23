@@ -37,12 +37,22 @@ model Centros_custo{
   id Int @id @default(autoincrement())
   id_matriz String
   descricao String
+  funcionario Funcionarios[]
 
   empresa Empresas @relation(fields:[id_matriz], references:[cnpj], onDelete:Restrict)
+}
+model Funcionarios{
+  id int @id @default(autoincrement())
+  id_centro_custo Int
+  nome String
+  centro_custo Centros_custo @relation(fields:[id_centro_custo], references:[id], onDelete:Cascade)
 }
 model Comandas {
   id Int @id @default(autoincrement())
   id_centro_custo Int
   id_servico Int
+  created_by Int
   created_at DateTime @default(now())
+
+  usuario Usuarios @relation(fields:[created_by], references:[id], onDelete:Restrict)
 }
