@@ -22,6 +22,7 @@ model Usuarios {
   nome String
   senha String
   acessos Acessos @relation(fields:[id_acesso], references:[id],onDelete: Restrict)
+  comanda Comandas[]
 }
 model Servicos {
   id Int @id
@@ -42,7 +43,7 @@ model Centros_custo{
   empresa Empresas @relation(fields:[id_matriz], references:[cnpj], onDelete:Restrict)
 }
 model Funcionarios{
-  id int @id @default(autoincrement())
+  id Int @id @default(autoincrement())
   id_centro_custo Int
   nome String
   centro_custo Centros_custo @relation(fields:[id_centro_custo], references:[id], onDelete:Cascade)
@@ -51,8 +52,10 @@ model Comandas {
   id Int @id @default(autoincrement())
   id_centro_custo Int
   id_servico Int
+  quantidade Int
   created_by Int
   created_at DateTime @default(now())
+  assinado Boolean @default(false)
 
   usuario Usuarios @relation(fields:[created_by], references:[id], onDelete:Restrict)
 }
