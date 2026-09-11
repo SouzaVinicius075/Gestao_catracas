@@ -8,7 +8,9 @@ const auth = async (req, res) => {
         const findUser = await usersModels.find({ "email": { contains: req.body.email, mode: "insensitive" } })
 
         if (findUser.length == 0 || !await bcrypt.compare(req.body.senha, findUser[0].senha)) {
-            return res.status(404).json("No Results Bro")
+            return res.status(404).json({
+                message: "Nenhum registro encontrado em nosso banco de dados com os dados fornecido, favor validar antes de realizar uma nova tentativa"
+            })
         }
         delete findUser[0].senha
 
@@ -16,7 +18,10 @@ const auth = async (req, res) => {
         const token = jwt.sign(findUser[0], process.env.JWT_SECRET, {
             expiresIn: '1H'
         })
-        return res.status(200).json(token)
+        return res.status(200).json({
+            message: "Login realizado com sucesso",
+            AuthToken: token
+        })
     } catch (error) {
         return res.status(500).json(error.message)
     }

@@ -10,52 +10,65 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
-model Acessos{
-  id Int @id @default(autoincrement())
-  nivel String 
+
+model Acessos {
+  id       Int        @id @default(autoincrement())
+  nivel    String
   usuarios Usuarios[]
 }
+
 model Usuarios {
-  id  Int @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   id_acesso Int
-  email String  @unique
-  nome String
-  senha String
-  acessos Acessos @relation(fields:[id_acesso], references:[id],onDelete: Restrict)
-  comanda Comandas[]
+  email     String     @unique
+  nome      String
+  senha     String
+  acessos   Acessos    @relation(fields: [id_acesso], references: [id], onDelete: Restrict)
+  comanda   Comandas[]
 }
+
 model Servicos {
-  id Int @id
-  descricao String 
+  id        Int        @id
+  descricao String
+  horaInicio String?
+  horaFim  String?
+  comandas  Comandas[]
 }
+
 model Empresas {
-  cnpj String @id 
-  nome String
-  active Boolean @default(true)
+  cnpj          String          @id
+  nome          String
+  active        Boolean         @default(true)
   centros_custo Centros_custo[]
 }
-model Centros_custo{
-  id Int @id @default(autoincrement())
-  id_matriz String
-  descricao String
+
+model Centros_custo {
+  id          Int            @id @default(autoincrement())
+  id_matriz   String
+  descricao   String
   funcionario Funcionarios[]
 
-  empresa Empresas @relation(fields:[id_matriz], references:[cnpj], onDelete:Restrict)
+  empresa  Empresas   @relation(fields: [id_matriz], references: [cnpj], onDelete: Restrict, onUpdate:Cascade)
+  comandas Comandas[]
 }
-model Funcionarios{
-  id Int @id @default(autoincrement())
-  id_centro_custo Int
-  nome String
-  centro_custo Centros_custo @relation(fields:[id_centro_custo], references:[id], onDelete:Cascade)
-}
-model Comandas {
-  id Int @id @default(autoincrement())
-  id_centro_custo Int
-  id_servico Int
-  quantidade Int
-  created_by Int
-  created_at DateTime @default(now())
-  assinado Boolean @default(false)
 
-  usuario Usuarios @relation(fields:[created_by], references:[id], onDelete:Restrict)
+model Funcionarios {
+  id              Int           @id @default(autoincrement())
+  id_centro_custo Int
+  nome            String
+  centro_custo    Centros_custo @relation(fields: [id_centro_custo], references: [id], onDelete: Cascade)
+}
+
+model Comandas {
+  id              Int      @id @default(autoincrement())
+  id_centro_custo Int
+  id_servico      Int
+  quantidade      Int
+  created_by      Int
+  created_at      DateTime @default(now())
+  assinado        Boolean  @default(false)
+
+  servico      Servicos      @relation(fields: [id_servico], references: [id])
+  centro_custo Centros_custo @relation(fields: [id_centro_custo], references: [id])
+  usuario      Usuarios      @relation(fields: [created_by], references: [id], onDelete: Restrict)
 }

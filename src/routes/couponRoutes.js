@@ -7,5 +7,6 @@ const routes = Router()
 routes.post('/', validadeBody.couponBody, couponControllers.insert)
     .get('/:couponId', couponControllers.find)
     .get('/', couponControllers.list)
+    .delete('/:couponId', couponControllers.remove)
 
 export default routes

@@ -1,19 +1,20 @@
 import couponModels from "../models/couponModels.js";
 
-const list = (req, res) => {
+const list = async (req, res) => {
     try {
         const couponList = await couponModels.list()
         if (couponList.length == 0) {
             return res.status(404).json("No results")
         }
-        return
+        return res.status(200).json(couponList)
     } catch (error) {
         return res.status(500).json(error.message)
     }
 }
-const find = (req, res) => {
+const find = async (req, res) => {
     try {
-        const findCoupon = await couponModels.find({})
+        const id = parseInt(req.params.couponId)
+        const findCoupon = await couponModels.find({ id })
         if (findCoupon.length == 0) {
             return res.status(404).json("No results")
         }
@@ -22,7 +23,7 @@ const find = (req, res) => {
         return res.status(500).json(error.message)
     }
 }
-const insert = (req, res) => {
+const insert = async (req, res) => {
     try {
         const { id_centro_custo, id_servico, quantidade, assinado = false } = req.body
         const couponInsertData = {
@@ -35,8 +36,24 @@ const insert = (req, res) => {
         return res.status(500).json(error.message)
     }
 }
+const remove = async (req, res) => {
+    try {
+        const id = parseInt(req.params.couponId)
+        const signedSlip = await couponModels.find({ id })
+        console.log(signedSlip[0].assinado);
+
+        if (signedSlip[0].assinado == true) {
+            return res.status(409).json("Cupom fechado, não será possivel excluir")
+        }
+        const removeCoupon = await couponModels.remove({ id })
+        return res.status(200).json(removeCoupon)
+    } catch (error) {
+        return res.status(500).json(error.message)
+    }
+}
 export default {
     list,
     find,
-    insert
+    insert,
+    remove
 }

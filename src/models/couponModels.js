@@ -1,11 +1,56 @@
 import prisma from "../config/prisma.js";
 
 const list = () => {
-    return prisma.Comandas.findMany()
+    return prisma.comandas.findMany({
+        select: {
+            id: true,
+            id_centro_custo: true,
+            quantidade: true,
+            assinado: true,
+            centro_custo: true,
+            servico: {
+                select: {
+                    descricao: true
+                }
+            },
+            usuario: {
+                select: {
+                    nome: true
+                }
+            },
+            centro_custo: {
+                select: {
+                    descricao: true
+                }
+            }
+        }
+    })
 }
 const find = (objectFilter) => {
     return prisma.comandas.findMany({
-        where: objectFilter
+        where: objectFilter,
+        select: {
+            id: true,
+            id_centro_custo: true,
+            quantidade: true,
+            assinado: true,
+            centro_custo: true,
+            servico: {
+                select: {
+                    descricao: true
+                }
+            },
+            usuario: {
+                select: {
+                    nome: true
+                }
+            },
+            centro_custo: {
+                select: {
+                    descricao: true
+                }
+            }
+        }
     })
 }
 const insert = (couponInsertData) => {
